@@ -12,7 +12,7 @@ import com.github.lykmapipo.localburst.sample.R;
 public class MainActivity extends AppCompatActivity implements LocalBurst.OnBroadcastListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String ACTION = MainActivity.class.getSimpleName();
+    private static final String ACTION = "Custom";
 
     private LocalBurst broadcast;
 
@@ -24,15 +24,28 @@ public class MainActivity extends AppCompatActivity implements LocalBurst.OnBroa
         //obtain local broadcast instance
         broadcast = LocalBurst.getInstance();
 
-        //simulate force broadcast
-        Button emitButton = (Button) findViewById(R.id.btnEmit);
-        emitButton.setOnClickListener(new View.OnClickListener() {
+        //simulate force custom broadcast
+        Button emitCustomButton = (Button) findViewById(R.id.btnEmitCustom);
+        emitCustomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //emit broadcast
                 Bundle bundle = new Bundle();
                 bundle.putString(TAG, TAG);
                 broadcast.emit(ACTION, bundle);
+            }
+        });
+
+
+        //simulate force default broadcast
+        Button emitDefaultButton = (Button) findViewById(R.id.btnEmitDefault);
+        emitDefaultButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //emit broadcast
+                Bundle bundle = new Bundle();
+                bundle.putString(TAG, TAG);
+                broadcast.emit(bundle);
             }
         });
 
@@ -49,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements LocalBurst.OnBroa
     protected void onResume() {
         super.onResume();
         broadcast.on(ACTION, this);
+        broadcast.on(LocalBurst.DEFAULT_ACTION, this);
     }
 
     @Override
@@ -65,6 +79,6 @@ public class MainActivity extends AppCompatActivity implements LocalBurst.OnBroa
      */
     @Override
     public void onBroadcast(String action, Bundle extras) {
-        Toast.makeText(this, "Broadcast Received", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, action + " Broadcast Received", Toast.LENGTH_LONG).show();
     }
 }

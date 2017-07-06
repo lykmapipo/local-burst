@@ -39,7 +39,7 @@ public final class LocalBurst extends BroadcastReceiver {
     /**
      * default action name
      */
-    public static final String DEFAULT_ACTION = "DEFAULT";
+    public static final String DEFAULT_ACTION = "Default";
 
     /**
      * class instance

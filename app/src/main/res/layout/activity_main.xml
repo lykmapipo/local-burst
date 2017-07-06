@@ -10,10 +10,19 @@
                 tools:context=".ui.MainActivity">
 
     <Button
-            android:text="Emit Broadcast"
+            android:text="Emit Custom Broadcast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="187dp"
-            android:id="@+id/btnEmit"/>
+            android:id="@+id/btnEmitCustom"/>
+
+    <Button
+            android:text="Emit Default Broadcast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:id="@+id/btnEmitDefault"/>
+
 </RelativeLayout>

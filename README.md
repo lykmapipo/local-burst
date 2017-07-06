@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements LocalBurst.OnBroa
     protected void onResume() {
         super.onResume();
         broadcast.on(ACTION, this);
+        broadcast.on(LocalBurst.DEFAULT_ACTION, this);
     }
 
     @Override
