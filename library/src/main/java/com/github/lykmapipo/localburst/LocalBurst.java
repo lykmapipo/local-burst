@@ -37,6 +37,11 @@ public final class LocalBurst extends BroadcastReceiver {
     private static final Object lock = new Object();
 
     /**
+     * default action name
+     */
+    public static final String DEFAULT_ACTION = "DEFAULT";
+
+    /**
      * class instance
      */
     private static LocalBurst instance;
@@ -171,6 +176,21 @@ public final class LocalBurst extends BroadcastReceiver {
             this.localBroadcastManager.sendBroadcast(intent);
         }
     }
+
+
+    /**
+     * Emit/Notify about default action
+     *
+     * @param bundle additional details to be handles to receiver of the broadcast
+     */
+    public void emit(Bundle bundle) {
+        if (isValidAction(DEFAULT_ACTION)) {
+            Intent intent = new Intent(DEFAULT_ACTION);
+            intent.putExtras(bundle);
+            this.localBroadcastManager.sendBroadcast(intent);
+        }
+    }
+
 
     /**
      * Emit/Notify about specific action
