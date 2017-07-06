@@ -1,7 +1,7 @@
 package com.github.lykmapipo.localburst.sample;
 
 import android.app.Application;
-import com.github.lykmapipo.localburst.LocalBroadcast;
+import com.github.lykmapipo.localburst.LocalBurst;
 
 /**
  * @author lally elias
@@ -14,6 +14,6 @@ public class SampleApp extends Application {
         super.onCreate();
 
         //initialize
-        LocalBroadcast.initialize(getApplicationContext());
+        LocalBurst.initialize(getApplicationContext());
     }
 }

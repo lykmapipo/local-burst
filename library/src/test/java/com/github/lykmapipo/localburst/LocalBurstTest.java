@@ -21,7 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @Config(sdk = 23)
 @RunWith(RobolectricTestRunner.class)
-public class LocalBroadcastTest {
+public class LocalBurstTest {
 
     private Context context;
     private String ACTION_ONE = "ONE";
@@ -31,14 +31,14 @@ public class LocalBroadcastTest {
     @Before
     public void setup() {
         context = ShadowApplication.getInstance().getApplicationContext();
-        LocalBroadcast.initialize(context);
+        LocalBurst.initialize(context);
     }
 
 
     @Test
     public void shouldBeAbleToGetLocalBroadcastInstance() {
 
-        LocalBroadcast broadcast = LocalBroadcast.getInstance();
+        LocalBurst broadcast = LocalBurst.getInstance();
 
         assertThat(broadcast, is(not(equalTo(null))));
     }
@@ -46,9 +46,9 @@ public class LocalBroadcastTest {
 
     @Test
     public void shouldBeAbleToReceiveBroadcast() {
-        LocalBroadcast broadcast = LocalBroadcast.getInstance();
+        LocalBurst broadcast = LocalBurst.getInstance();
 
-        LocalBroadcast.OnBroadcastListener listener = new LocalBroadcast.OnBroadcastListener() {
+        LocalBurst.OnBroadcastListener listener = new LocalBurst.OnBroadcastListener() {
             @Override
             public void onBroadcast(String action, Bundle extras) {
                 assertThat(action, is(equalTo(ACTION_ONE)));
@@ -65,9 +65,9 @@ public class LocalBroadcastTest {
 
     @Test
     public void shouldBeAbleToReceiveBroadcastWithExtras() {
-        LocalBroadcast broadcast = LocalBroadcast.getInstance();
+        LocalBurst broadcast = LocalBurst.getInstance();
 
-        LocalBroadcast.OnBroadcastListener listener = new LocalBroadcast.OnBroadcastListener() {
+        LocalBurst.OnBroadcastListener listener = new LocalBurst.OnBroadcastListener() {
             @Override
             public void onBroadcast(String action, Bundle extras) {
                 assertThat(action, is(equalTo(ACTION_ONE)));
@@ -88,9 +88,9 @@ public class LocalBroadcastTest {
 
     @Test
     public void shouldBeAbleToEmitBroadcast() {
-        LocalBroadcast broadcast = LocalBroadcast.getInstance();
+        LocalBurst broadcast = LocalBurst.getInstance();
 
-        LocalBroadcast.OnBroadcastListener listener = new LocalBroadcast.OnBroadcastListener() {
+        LocalBurst.OnBroadcastListener listener = new LocalBurst.OnBroadcastListener() {
             @Override
             public void onBroadcast(String action, Bundle extras) {
                 assertThat(action, is(equalTo(ACTION_ONE)));
@@ -113,9 +113,9 @@ public class LocalBroadcastTest {
     @Test
     public void shouldBeAbleToRemoveAllListenersPerSpecifiedActions() {
 
-        LocalBroadcast broadcast = LocalBroadcast.getInstance();
+        LocalBurst broadcast = LocalBurst.getInstance();
 
-        LocalBroadcast.OnBroadcastListener listener = new LocalBroadcast.OnBroadcastListener() {
+        LocalBurst.OnBroadcastListener listener = new LocalBurst.OnBroadcastListener() {
             @Override
             public void onBroadcast(String action, Bundle extras) {
                 assertThat(action, is(equalTo(ACTION_ONE)));
@@ -140,9 +140,9 @@ public class LocalBroadcastTest {
     @Test
     public void shouldBeAbleToRemoveSpecifiedListener() {
 
-        LocalBroadcast broadcast = LocalBroadcast.getInstance();
+        LocalBurst broadcast = LocalBurst.getInstance();
 
-        LocalBroadcast.OnBroadcastListener listener = new LocalBroadcast.OnBroadcastListener() {
+        LocalBurst.OnBroadcastListener listener = new LocalBurst.OnBroadcastListener() {
             @Override
             public void onBroadcast(String action, Bundle extras) {
                 assertThat(action, is(equalTo(ACTION_ONE)));
@@ -167,9 +167,9 @@ public class LocalBroadcastTest {
     @Test
     public void shouldBeAbleToRemoveAllListeners() {
 
-        LocalBroadcast broadcast = LocalBroadcast.getInstance();
+        LocalBurst broadcast = LocalBurst.getInstance();
 
-        LocalBroadcast.OnBroadcastListener listener = new LocalBroadcast.OnBroadcastListener() {
+        LocalBurst.OnBroadcastListener listener = new LocalBurst.OnBroadcastListener() {
             @Override
             public void onBroadcast(String action, Bundle extras) {
                 assertThat(action, is(equalTo(ACTION_ONE)));
@@ -196,9 +196,9 @@ public class LocalBroadcastTest {
 
     @Test
     public void shouldBeAbleToRegisterBroadcastListener() {
-        LocalBroadcast broadcast = LocalBroadcast.getInstance();
+        LocalBurst broadcast = LocalBurst.getInstance();
 
-        LocalBroadcast.OnBroadcastListener listener = new LocalBroadcast.OnBroadcastListener() {
+        LocalBurst.OnBroadcastListener listener = new LocalBurst.OnBroadcastListener() {
             @Override
             public void onBroadcast(String action, Bundle extras) {
                 assertThat(action, is(equalTo(ACTION_ONE)));
@@ -216,7 +216,7 @@ public class LocalBroadcastTest {
 
     @After
     public void cleanup() {
-        LocalBroadcast.getInstance().dispose();
+        LocalBurst.getInstance().dispose();
         context = null;
     }
 }

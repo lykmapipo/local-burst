@@ -4,7 +4,7 @@ local-burst
 [![](https://jitpack.io/v/lykmapipo/local-burst.svg)](https://jitpack.io/#lykmapipo/local-burst)
 
 
-Simple Local Broadcast(s) on top of android LocalBroadcastManager.
+Simple Local Broadcast(s) on top of android LocalBurstManager.
 
 ## Installation
 Add [https://jitpack.io](https://jitpack.io) to your build.gradle with:
@@ -36,7 +36,7 @@ public class SampleApp extends Application{
         super.onCreate();
 
         //initialize local burst
-        LocalBroadcast.initialize(<applicationContext>);
+        LocalBurst.initialize(getApplicationContext());
         
     }
 
@@ -46,12 +46,12 @@ public class SampleApp extends Application{
 In activity(or other component) start listen for broadcasts
 
 ```java
-public class MainActivity extends AppCompatActivity implements LocalBroadcast.OnBroadcastListener {
+public class MainActivity extends AppCompatActivity implements LocalBurst.OnBroadcastListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String ACTION = MainActivity.class.getSimpleName();
 
-    private LocalBroadcast broadcast;
+    private LocalBurst broadcast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements LocalBroadcast.On
         setContentView(R.layout.activity_main);
 
         //obtain local broadcast instance
-        broadcast = LocalBroadcast.getInstance();
+        broadcast = LocalBurst.getInstance();
 
         //simulate force broadcast
         Button emitButton = (Button) findViewById(R.id.btnEmit);

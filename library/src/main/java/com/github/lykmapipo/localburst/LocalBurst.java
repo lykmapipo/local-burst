@@ -19,7 +19,7 @@ import java.util.HashSet;
  *
  * @author Lally Elias <a href="maito:lallyelias87@gmail.com">lallyelias87@gmail.com</a>
  */
-public final class LocalBroadcast extends BroadcastReceiver {
+public final class LocalBurst extends BroadcastReceiver {
 
     /**
      * local reference for android application {@link Context}
@@ -39,7 +39,7 @@ public final class LocalBroadcast extends BroadcastReceiver {
     /**
      * class instance
      */
-    private static LocalBroadcast instance;
+    private static LocalBurst instance;
 
     /**
      * local {@link OnBroadcastListener} references
@@ -53,31 +53,31 @@ public final class LocalBroadcast extends BroadcastReceiver {
      *
      * @param context {@link Context}
      */
-    private LocalBroadcast(Context context) {
+    private LocalBurst(Context context) {
         this.context = context.getApplicationContext();
         this.localBroadcastManager = LocalBroadcastManager.getInstance(this.context);
     }
 
 
     /**
-     * obtain current {@link LocalBroadcast} instance
+     * obtain current {@link LocalBurst} instance
      *
-     * @return {@link LocalBroadcast}
+     * @return {@link LocalBurst}
      */
-    public static LocalBroadcast getInstance() {
+    public static LocalBurst getInstance() {
         return instance;
     }
 
     /**
-     * initialize new {@link LocalBroadcast} instance
+     * initialize new {@link LocalBurst} instance
      *
-     * @return {@link LocalBroadcast}
+     * @return {@link LocalBurst}
      */
-    public static synchronized LocalBroadcast initialize(Context context) {
+    public static synchronized LocalBurst initialize(Context context) {
 
         synchronized (lock) {
             if (instance == null) {
-                instance = new LocalBroadcast(context);
+                instance = new LocalBurst(context);
             }
             return instance;
         }

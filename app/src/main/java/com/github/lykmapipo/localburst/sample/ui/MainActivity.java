@@ -5,16 +5,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import com.github.lykmapipo.localburst.LocalBroadcast;
+import com.github.lykmapipo.localburst.LocalBurst;
 import com.github.lykmapipo.localburst.sample.R;
 
 
-public class MainActivity extends AppCompatActivity implements LocalBroadcast.OnBroadcastListener {
+public class MainActivity extends AppCompatActivity implements LocalBurst.OnBroadcastListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String ACTION = MainActivity.class.getSimpleName();
 
-    private LocalBroadcast broadcast;
+    private LocalBurst broadcast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements LocalBroadcast.On
         setContentView(R.layout.activity_main);
 
         //obtain local broadcast instance
-        broadcast = LocalBroadcast.getInstance();
+        broadcast = LocalBurst.getInstance();
 
         //simulate force broadcast
         Button emitButton = (Button) findViewById(R.id.btnEmit);
