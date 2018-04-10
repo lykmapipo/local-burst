@@ -4,7 +4,7 @@ local-burst
 [![](https://jitpack.io/v/lykmapipo/local-burst.svg)](https://jitpack.io/#lykmapipo/local-burst)
 
 
-Simple Local Broadcast(s) on top of android LocalBurstManager.
+Simple Local Broadcast(s) on top of android [LocalBroadcastManager](https://developer.android.com/reference/android/support/v4/content/LocalBroadcastManager.html).
 
 ## Installation
 Add [https://jitpack.io](https://jitpack.io) to your build.gradle with:

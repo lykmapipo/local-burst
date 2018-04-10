@@ -22,30 +22,25 @@ import java.util.HashSet;
 public final class LocalBurst extends BroadcastReceiver {
 
     /**
-     * local reference for android application {@link Context}
+     * default action name
      */
-    private Context context;
-
-    /**
-     * local reference for {@link LocalBroadcastManager}
-     */
-    private LocalBroadcastManager localBroadcastManager;
-
+    public static final String DEFAULT_ACTION = "Default";
     /**
      * class lock
      */
     private static final Object lock = new Object();
-
-    /**
-     * default action name
-     */
-    public static final String DEFAULT_ACTION = "Default";
-
     /**
      * class instance
      */
     private static LocalBurst instance;
-
+    /**
+     * local reference for android application {@link Context}
+     */
+    private Context context;
+    /**
+     * local reference for {@link LocalBroadcastManager}
+     */
+    private LocalBroadcastManager localBroadcastManager;
     /**
      * local {@link OnBroadcastListener} references
      */

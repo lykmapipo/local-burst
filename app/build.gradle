@@ -1,9 +1,9 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 27
 
-    buildToolsVersion "25.0.3"
+    buildToolsVersion '27.0.3'
 
     lintOptions {
         abortOnError false
@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId "com.github.lykmapipo.localburst.sample"
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 10
         versionName "0.1.0"
     }
@@ -31,6 +31,6 @@ android {
 }
 
 dependencies {
-    compile project(':library')
-    compile "com.android.support:appcompat-v7:${APPCOMPAT_VERSION}"
+    implementation project(':library')
+    implementation "com.android.support:appcompat-v7:${APPCOMPAT_VERSION}"
 }
