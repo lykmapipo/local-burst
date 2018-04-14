@@ -19,7 +19,7 @@ add `local-burst` dependency into your project
 
 ```gradle
 dependencies {
-    compile 'com.github.lykmapipo:local-burst:v0.2.0'
+    compile 'com.github.lykmapipo:local-burst:v0.3.0'
 }
 ```
 
