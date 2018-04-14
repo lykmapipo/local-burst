@@ -64,7 +64,7 @@ public final class LocalBurst extends BroadcastReceiver {
      *
      * @return {@link LocalBurst}
      */
-    public static LocalBurst getInstance() {
+    public static synchronized LocalBurst getInstance() {
         return instance;
     }
 
@@ -84,6 +84,68 @@ public final class LocalBurst extends BroadcastReceiver {
 
     }
 
+    /**
+     * Emit/Notify about specific action
+     *
+     * @param action action name
+     */
+    public static synchronized void $emit(String action) {
+        LocalBurst instance = LocalBurst.getInstance();
+        if (instance != null) {
+            instance.emit(action);
+        }
+    }
+
+    /**
+     * Emit/Notify about specific action
+     *
+     * @param action action name
+     * @param bundle additional details to be handles to receiver of the broadcast
+     */
+    public static synchronized void $emit(String action, Bundle bundle) {
+        LocalBurst instance = LocalBurst.getInstance();
+        if (instance != null) {
+            instance.emit(action, bundle);
+        }
+    }
+
+    /**
+     * Emit/Notify about default action
+     *
+     * @param bundle additional details to be handles to receiver of the broadcast
+     */
+    public static synchronized void $emit(Bundle bundle) {
+        LocalBurst instance = LocalBurst.getInstance();
+        if (instance != null) {
+            instance.emit(bundle);
+        }
+    }
+
+    /**
+     * Register a component to be able to receive action broadcasts
+     *
+     * @param listener {@link OnBroadcastListener}
+     * @param actions  {@link String}
+     */
+    public static synchronized void $on(OnBroadcastListener listener, String... actions) {
+        LocalBurst instance = LocalBurst.getInstance();
+        if (instance != null) {
+            instance.on(listener, actions);
+        }
+    }
+
+    /**
+     * Register a component to be able to receive action broadcasts
+     *
+     * @param action    {@link String}
+     * @param listeners {@link OnBroadcastListener}
+     */
+    public static synchronized void $on(String action, OnBroadcastListener... listeners) {
+        LocalBurst instance = LocalBurst.getInstance();
+        if (instance != null) {
+            instance.on(action, listeners);
+        }
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -157,7 +219,6 @@ public final class LocalBurst extends BroadcastReceiver {
 
     }
 
-
     /**
      * Emit/Notify about specific action
      *
@@ -172,7 +233,6 @@ public final class LocalBurst extends BroadcastReceiver {
         }
     }
 
-
     /**
      * Emit/Notify about default action
      *
@@ -186,7 +246,6 @@ public final class LocalBurst extends BroadcastReceiver {
         }
     }
 
-
     /**
      * Emit/Notify about specific action
      *
@@ -198,7 +257,6 @@ public final class LocalBurst extends BroadcastReceiver {
             this.localBroadcastManager.sendBroadcast(intent);
         }
     }
-
 
     /**
      * Clear action listener(s)

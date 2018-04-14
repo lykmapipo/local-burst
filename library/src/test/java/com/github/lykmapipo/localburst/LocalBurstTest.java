@@ -3,6 +3,7 @@ package com.github.lykmapipo.localburst;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +12,11 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
@@ -106,6 +111,28 @@ public class LocalBurstTest {
         Bundle bundle = new Bundle();
         bundle.putString(ACTION_TWO, ACTION_TWO);
         broadcast.emit(ACTION_ONE, bundle);
+
+    }
+
+    @Test
+    public void shouldBeAbleToEmitBroadcast_Static() {
+
+        LocalBurst.OnBroadcastListener listener = new LocalBurst.OnBroadcastListener() {
+            @Override
+            public void onBroadcast(String action, Bundle extras) {
+                assertThat(action, is(equalTo(ACTION_ONE)));
+
+                assertThat(extras, is(notNullValue()));
+                String extra = extras.getString(ACTION_TWO, "");
+                assertThat(extra, is(equalTo(ACTION_TWO)));
+            }
+        };
+        LocalBurst.$on(ACTION_ONE, listener);
+
+        //emit broadcast
+        Bundle bundle = new Bundle();
+        bundle.putString(ACTION_TWO, ACTION_TWO);
+        LocalBurst.$emit(ACTION_ONE, bundle);
 
     }
 
