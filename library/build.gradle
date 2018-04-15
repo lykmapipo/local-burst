@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 30
-        versionName "0.3.0"
+        versionCode 40
+        versionName "0.4.0"
         consumerProguardFiles 'proguard-rules.pro'
     }
 }
@@ -20,7 +20,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "com.android.support:appcompat-v7:${APPCOMPAT_VERSION}"
+    api "com.android.support:appcompat-v7:${APPCOMPAT_VERSION}"
 
     //test dependencies
     testImplementation "junit:junit:${JUNIT_VERSION}"
