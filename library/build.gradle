@@ -4,13 +4,12 @@ apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.lykmapipo'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
-    buildToolsVersion "27.0.3"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 41
         versionName "0.4.1"
         consumerProguardFiles 'proguard-rules.pro'
