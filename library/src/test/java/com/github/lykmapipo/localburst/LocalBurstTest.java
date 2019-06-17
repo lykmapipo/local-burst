@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowApplication;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -24,7 +24,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @email lallyelias87@gmail.com, lally.elias@byteskode.com
  */
 
-@Config(sdk = 23)
 @RunWith(RobolectricTestRunner.class)
 public class LocalBurstTest {
 
@@ -35,8 +34,8 @@ public class LocalBurstTest {
 
     @Before
     public void setup() {
-        context = ShadowApplication.getInstance().getApplicationContext();
-        LocalBurst.initialize(context);
+        context = ApplicationProvider.getApplicationContext();
+        LocalBurst.create(context);
     }
 
 

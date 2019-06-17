@@ -5,7 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -14,7 +15,7 @@ import java.util.HashSet;
 
 /**
  * <p>
- * Simple Local Broadcast(s) on top of {@link android.support.v4.content.LocalBroadcastManager}
+ * Simple Local Broadcast(s) on top of {@link LocalBroadcastManager}
  * </p>
  *
  * @author Lally Elias <a href="maito:lallyelias87@gmail.com">lallyelias87@gmail.com</a>
@@ -72,8 +73,25 @@ public final class LocalBurst extends BroadcastReceiver {
      * initialize new {@link LocalBurst} instance
      *
      * @return {@link LocalBurst}
+     * @deprecated
      */
     public static synchronized LocalBurst initialize(Context context) {
+
+        synchronized (lock) {
+            if (instance == null) {
+                instance = new LocalBurst(context);
+            }
+            return instance;
+        }
+
+    }
+
+    /**
+     * initialize new {@link LocalBurst} instance
+     *
+     * @return {@link LocalBurst}
+     */
+    public static synchronized LocalBurst create(Context context) {
 
         synchronized (lock) {
             if (instance == null) {

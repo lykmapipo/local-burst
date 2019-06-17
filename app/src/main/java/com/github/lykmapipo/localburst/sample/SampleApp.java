@@ -1,6 +1,7 @@
 package com.github.lykmapipo.localburst.sample;
 
 import android.app.Application;
+
 import com.github.lykmapipo.localburst.LocalBurst;
 
 /**
@@ -14,6 +15,6 @@ public class SampleApp extends Application {
         super.onCreate();
 
         //initialize
-        LocalBurst.initialize(getApplicationContext());
+        LocalBurst.create(getApplicationContext());
     }
 }

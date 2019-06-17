@@ -14,17 +14,28 @@ android {
         versionName "0.4.1"
         consumerProguardFiles 'proguard-rules.pro'
     }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api "com.android.support:appcompat-v7:${APPCOMPAT_VERSION}"
 
-    //test dependencies
+    implementation "androidx.annotation:annotation:${ANDROIDX_ANNOTATION_VERSION}"
+    implementation "androidx.appcompat:appcompat:${ANDROIDX_APPCOMPACT_VERSION}"
+
+    // test dependencies
     testImplementation "junit:junit:${JUNIT_VERSION}"
     testImplementation "org.mockito:mockito-core:${MOCKITO_VERSION}"
     testImplementation "org.robolectric:robolectric:${ROBOLECTRIC_VERSION}"
+    testImplementation "com.squareup.okhttp3:mockwebserver:${OKHTTP_VERSION}"
+    testImplementation "com.squareup.retrofit2:retrofit-mock:${RETROFIT_VERSION}"
+    testImplementation "androidx.test:core:${ANDROIDX_TEST_CORE}"
 }
 
 // build a jar with source files

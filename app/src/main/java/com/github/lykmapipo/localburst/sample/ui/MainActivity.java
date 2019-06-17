@@ -1,10 +1,12 @@
 package com.github.lykmapipo.localburst.sample.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.github.lykmapipo.localburst.LocalBurst;
 import com.github.lykmapipo.localburst.sample.R;
 
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements LocalBurst.OnBroa
         broadcast = LocalBurst.getInstance();
 
         //simulate force custom broadcast
-        Button emitCustomButton = (Button) findViewById(R.id.btnEmitCustom);
+        Button emitCustomButton = findViewById(R.id.btnEmitCustom);
         emitCustomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements LocalBurst.OnBroa
 
 
         //simulate force default broadcast
-        Button emitDefaultButton = (Button) findViewById(R.id.btnEmitDefault);
+        Button emitDefaultButton = findViewById(R.id.btnEmitDefault);
         emitDefaultButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
