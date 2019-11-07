@@ -6,8 +6,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.github.lykmapipo.common.Common;
@@ -46,8 +50,8 @@ public final class LocalBurst extends BroadcastReceiver {
     /**
      * local {@link OnBroadcastListener} references
      */
-    private HashMap<String, Set<OnBroadcastListener>> listeners = new
-            HashMap<String, Set<OnBroadcastListener>>();
+    private HashMap<String, Set<OnBroadcastListener>> listeners =
+            new HashMap<String, Set<OnBroadcastListener>>();
 
 
     /**
@@ -140,16 +144,71 @@ public final class LocalBurst extends BroadcastReceiver {
     }
 
     /**
+     * Clear action listener(s)
+     *
+     * @param actions {@link String}
+     */
+    public static synchronized void $removeListeners(String... actions) {
+        LocalBurst instance = LocalBurst.getInstance();
+        if (instance != null) {
+            instance.removeListeners(actions);
+        }
+    }
+
+    /**
      * Register a component to be able to receive action broadcasts
      *
      * @param action    {@link String}
      * @param listeners {@link OnBroadcastListener}
+     * @since 0.6.0
      */
     public static synchronized void $on(@NonNull String action, @NonNull OnBroadcastListener... listeners) {
         LocalBurst instance = LocalBurst.getInstance();
         if (instance != null) {
             instance.on(action, listeners);
         }
+    }
+
+    /**
+     * Clear action listener(s)
+     *
+     * @param listeners {@link OnBroadcastListener}
+     * @since 0.6.0
+     */
+    public static synchronized void $removeListeners(OnBroadcastListener... listeners) {
+        LocalBurst instance = LocalBurst.getInstance();
+        if (instance != null) {
+            instance.removeListeners(listeners);
+        }
+    }
+
+    /**
+     * Listen for broadcasts on default action
+     *
+     * @param owner    The LifecycleOwner which controls the observer
+     * @param observer The observer that will receive the network status
+     * @since 0.6.0
+     */
+    @MainThread
+    public static synchronized void observe(
+            @NonNull LifecycleOwner owner, @NonNull Observer<Bundle> observer) {
+        observe(owner, DEFAULT_ACTION, observer);
+    }
+
+    /**
+     * Listen for broadcasted actions
+     *
+     * @param owner    The LifecycleOwner which controls the observer
+     * @param action   valid action to observe
+     * @param observer The observer that will receive the network status
+     * @since 0.6.0
+     */
+    @MainThread
+    public static synchronized void observe(
+            @NonNull LifecycleOwner owner, @NonNull String action,
+            @NonNull Observer<Bundle> observer) {
+        LocalBroadcastLiveData broadcast = new LocalBroadcastLiveData(action);
+        broadcast.observe(owner, observer);
     }
 
     @Override
@@ -382,5 +441,32 @@ public final class LocalBurst extends BroadcastReceiver {
          * @param extras intent extras received from the action
          */
         void onBroadcast(@NonNull String action, @NonNull Bundle extras);
+    }
+
+    /**
+     * A {@see LiveData} class which wraps the {@link OnBroadcastListener}.
+     *
+     * @since 0.6.0
+     */
+    private static class LocalBroadcastLiveData extends LiveData<Bundle> {
+        // refs
+        private String action;
+        private OnBroadcastListener listener = (action, extras) -> postValue(extras);
+
+        public LocalBroadcastLiveData(@NonNull String action) {
+            this.action = action;
+        }
+
+        @Override
+        protected void onActive() {
+            super.onActive();
+            LocalBurst.$on(this.action, listener);
+        }
+
+        @Override
+        protected void onInactive() {
+            super.onInactive();
+            LocalBurst.$removeListeners(this.action);
+        }
     }
 }

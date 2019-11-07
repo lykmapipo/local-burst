@@ -19,7 +19,7 @@ add `local-burst` dependency into your project
 
 ```gradle
 dependencies {
-    compile 'com.github.lykmapipo:local-burst:v0.5.1'
+    compile 'com.github.lykmapipo:local-burst:v0.6.0'
 }
 ```
 
@@ -28,80 +28,69 @@ dependencies {
 Initialize `local-burst`
 
 ```java
-public class SampleApp extends Application{
-
+public class SampleApp extends Application {
     @Override
     public void onCreate() {
-   
         super.onCreate();
-        LocalBurst.create(getApplicationContext());
-        
-    }
 
+        //initialize
+        LocalBurst.of(new Provider() {
+            @NonNull
+            @Override
+            public Context getApplicationContext() {
+                return SampleApp.this;
+            }
+        });
+    }
 }
 ```
 
 In activity(or other component) start listen for broadcasts
 
 ```java
-public class MainActivity extends AppCompatActivity implements LocalBurst.OnBroadcastListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String ACTION = MainActivity.class.getSimpleName();
-
-    private LocalBurst broadcast;
+    private static final String ACTION = "Custom";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //obtain local broadcast instance
-        broadcast = LocalBurst.getInstance();
+        //simulate force custom broadcast
+        Button emitCustomButton = findViewById(R.id.btnEmitCustom);
+        emitCustomButton.setOnClickListener(v -> {
+            //emit broadcast
+            Bundle bundle = new Bundle();
+            bundle.putString(TAG, TAG);
+            LocalBurst.$emit(ACTION, bundle);
+        });
 
-        //simulate force broadcast
-        Button emitButton = (Button) findViewById(R.id.btnEmit);
-        emitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //emit broadcast
-                Bundle bundle = new Bundle();
-                bundle.putString(TAG, TAG);
-                broadcast.emit(ACTION, bundle);
-            }
+
+        //simulate force default broadcast
+        Button emitDefaultButton = findViewById(R.id.btnEmitDefault);
+        emitDefaultButton.setOnClickListener(v -> {
+            //emit broadcast
+            Bundle bundle = new Bundle();
+            bundle.putString(TAG, TAG);
+            LocalBurst.$emit(bundle);
+        });
+
+        // use live data observers
+
+        LocalBurst.observe(this, bundle -> {
+            toast(LocalBurst.DEFAULT_ACTION, bundle);
+        });
+
+        LocalBurst.observe(this, ACTION, bundle -> {
+            toast(ACTION, bundle);
         });
 
     }
 
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        broadcast.removeListeners(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        broadcast.on(ACTION, this);
-        broadcast.on(LocalBurst.DEFAULT_ACTION, this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        broadcast.removeListeners(this);
-    }
-
-    /**
-     * Receive local broadcast and process it
-     *
-     * @param action name of the action to listen on
-     * @param extras intent extras received from the action
-     */
-    @Override
-    public void onBroadcast(String action, Bundle extras) {
-        Toast.makeText(this, "Broadcast Received", Toast.LENGTH_LONG).show();
+    private void toast(@NonNull String action, @NonNull Bundle extras) {
+        Toast.makeText(this, action + " Broadcast Received", Toast.LENGTH_LONG).show();
     }
 }
 ```
@@ -120,7 +109,7 @@ Do not forget to add a bit of test(s) of what value you adding.
 
 (The MIT License)
 
-Copyright (c) 2017 lykmapipo, lykmapipo Group && Contributors
+Copyright (c) lykmapipo && Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
