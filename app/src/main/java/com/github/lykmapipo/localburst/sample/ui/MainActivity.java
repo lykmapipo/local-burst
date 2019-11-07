@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.lykmapipo.localburst.LocalBurst;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements LocalBurst.OnBroa
      * @param extras intent extras received from the action
      */
     @Override
-    public void onBroadcast(String action, Bundle extras) {
+    public void onBroadcast(@NonNull String action, @NonNull Bundle extras) {
         Toast.makeText(this, action + " Broadcast Received", Toast.LENGTH_LONG).show();
     }
 }

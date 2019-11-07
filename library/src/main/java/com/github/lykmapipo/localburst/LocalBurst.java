@@ -6,57 +6,75 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.github.lykmapipo.common.Common;
+import com.github.lykmapipo.common.provider.Provider;
+
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Set;
 
 /**
- * <p>
  * Simple Local Broadcast(s) on top of {@link LocalBroadcastManager}
- * </p>
  *
- * @author Lally Elias <a href="maito:lallyelias87@gmail.com">lallyelias87@gmail.com</a>
+ * @since 0.1.0
  */
 public final class LocalBurst extends BroadcastReceiver {
-
     /**
      * default action name
      */
     public static final String DEFAULT_ACTION = "Default";
-    /**
-     * class lock
-     */
-    private static final Object lock = new Object();
+
     /**
      * class instance
      */
     private static LocalBurst instance;
+
     /**
-     * local reference for android application {@link Context}
+     * local reference for application {@link Provider}
      */
-    private Context context;
+    private Provider appProvider;
+
     /**
      * local reference for {@link LocalBroadcastManager}
      */
     private LocalBroadcastManager localBroadcastManager;
+
     /**
      * local {@link OnBroadcastListener} references
      */
-    private HashMap<String, HashSet<OnBroadcastListener>> listeners = new
-            HashMap<String, HashSet<OnBroadcastListener>>();
+    private HashMap<String, Set<OnBroadcastListener>> listeners = new
+            HashMap<String, Set<OnBroadcastListener>>();
 
 
     /**
      * Private constructor
      *
-     * @param context {@link Context}
+     * @param provider {@link Provider}
      */
-    private LocalBurst(Context context) {
-        this.context = context.getApplicationContext();
-        this.localBroadcastManager = LocalBroadcastManager.getInstance(this.context);
+    private LocalBurst(@NonNull Provider provider) {
+        this.appProvider = provider;
+
+        Context context = this.appProvider.getApplicationContext();
+        this.localBroadcastManager =
+                LocalBroadcastManager.getInstance(context);
+    }
+
+    /**
+     * initialize new {@link LocalBurst} instance
+     *
+     * @return {@link LocalBurst}
+     */
+    @NonNull
+    public static synchronized LocalBurst of(@NonNull Provider provider) {
+        if (instance == null) {
+            Common.of(provider);
+            instance = new LocalBurst(provider);
+        }
+        return instance;
     }
 
 
@@ -65,49 +83,18 @@ public final class LocalBurst extends BroadcastReceiver {
      *
      * @return {@link LocalBurst}
      */
+    @Nullable
     public static synchronized LocalBurst getInstance() {
         return instance;
     }
 
-    /**
-     * initialize new {@link LocalBurst} instance
-     *
-     * @return {@link LocalBurst}
-     * @deprecated
-     */
-    public static synchronized LocalBurst initialize(Context context) {
-
-        synchronized (lock) {
-            if (instance == null) {
-                instance = new LocalBurst(context);
-            }
-            return instance;
-        }
-
-    }
-
-    /**
-     * initialize new {@link LocalBurst} instance
-     *
-     * @return {@link LocalBurst}
-     */
-    public static synchronized LocalBurst create(Context context) {
-
-        synchronized (lock) {
-            if (instance == null) {
-                instance = new LocalBurst(context);
-            }
-            return instance;
-        }
-
-    }
 
     /**
      * Emit/Notify about specific action
      *
      * @param action action name
      */
-    public static synchronized void $emit(String action) {
+    public static synchronized void $emit(@NonNull String action) {
         LocalBurst instance = LocalBurst.getInstance();
         if (instance != null) {
             instance.emit(action);
@@ -120,7 +107,7 @@ public final class LocalBurst extends BroadcastReceiver {
      * @param action action name
      * @param bundle additional details to be handles to receiver of the broadcast
      */
-    public static synchronized void $emit(String action, Bundle bundle) {
+    public static synchronized void $emit(@NonNull String action, @NonNull Bundle bundle) {
         LocalBurst instance = LocalBurst.getInstance();
         if (instance != null) {
             instance.emit(action, bundle);
@@ -132,7 +119,7 @@ public final class LocalBurst extends BroadcastReceiver {
      *
      * @param bundle additional details to be handles to receiver of the broadcast
      */
-    public static synchronized void $emit(Bundle bundle) {
+    public static synchronized void $emit(@NonNull Bundle bundle) {
         LocalBurst instance = LocalBurst.getInstance();
         if (instance != null) {
             instance.emit(bundle);
@@ -145,7 +132,7 @@ public final class LocalBurst extends BroadcastReceiver {
      * @param listener {@link OnBroadcastListener}
      * @param actions  {@link String}
      */
-    public static synchronized void $on(OnBroadcastListener listener, String... actions) {
+    public static synchronized void $on(@NonNull OnBroadcastListener listener, @NonNull String... actions) {
         LocalBurst instance = LocalBurst.getInstance();
         if (instance != null) {
             instance.on(listener, actions);
@@ -158,7 +145,7 @@ public final class LocalBurst extends BroadcastReceiver {
      * @param action    {@link String}
      * @param listeners {@link OnBroadcastListener}
      */
-    public static synchronized void $on(String action, OnBroadcastListener... listeners) {
+    public static synchronized void $on(@NonNull String action, @NonNull OnBroadcastListener... listeners) {
         LocalBurst instance = LocalBurst.getInstance();
         if (instance != null) {
             instance.on(action, listeners);
@@ -168,19 +155,19 @@ public final class LocalBurst extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         //obtain broadcast action
-        String action = intent.getAction();
+        String action = Common.Strings.valueOr(intent.getAction(), DEFAULT_ACTION);
 
         //obtain action listeners
         if (this.listeners != null && !this.listeners.isEmpty()) {
             //obtain specific action broadcast listeners
-            HashSet<OnBroadcastListener> listeners = this.listeners.get(action);
+            Set<OnBroadcastListener> listeners = this.listeners.get(action);
 
             //obtain action listener refs
             if (listeners != null && !listeners.isEmpty()) {
 
                 //notify all action listeners
                 for (OnBroadcastListener listener : listeners) {
-                    Bundle extras = intent.getExtras();
+                    Bundle extras = Common.Bundles.from(intent.getExtras());
                     listener.onBroadcast(action, extras);
                 }
 
@@ -195,18 +182,17 @@ public final class LocalBurst extends BroadcastReceiver {
      * @param action    {@link String}
      * @param listeners {@link OnBroadcastListener}
      */
-    public void on(String action, OnBroadcastListener... listeners) {
+    public void on(@NonNull String action, @NonNull OnBroadcastListener... listeners) {
 
         if (isValidAction(action)) {
             //register broadcast receiver
             this.localBroadcastManager.registerReceiver(this, new IntentFilter(action));
 
             //register {@link OnReceiveBroadcastListener}
-            HashSet<OnBroadcastListener> _listeners = new HashSet<OnBroadcastListener>();
-            Collections.addAll(_listeners, listeners);
+            Set<OnBroadcastListener> _listeners = Common.Value.setOf(listeners);
 
             //get action broadcast listeners
-            HashSet<OnBroadcastListener> broadcastListeners = this.listeners.get(action);
+            Set<OnBroadcastListener> broadcastListeners = this.listeners.get(action);
 
             if (broadcastListeners == null) {
                 this.listeners.put(action, _listeners);
@@ -223,14 +209,13 @@ public final class LocalBurst extends BroadcastReceiver {
      * @param listener {@link OnBroadcastListener}
      * @param actions  {@link String}
      */
-    public void on(OnBroadcastListener listener, String... actions) {
+    public void on(@NonNull OnBroadcastListener listener, @NonNull String... actions) {
         //prepare action set
-        HashSet<String> _actions = new HashSet<String>();
-        Collections.addAll(_actions, actions);
+        Set<String> _actions = Common.Value.setOf(actions);
 
         //register broadcast listener
         for (String action : _actions) {
-            if (isValidAction(action) && listener != null) {
+            if (isValidAction(action)) {
                 this.on(action, listener);
             }
         }
@@ -243,7 +228,7 @@ public final class LocalBurst extends BroadcastReceiver {
      * @param action action name
      * @param bundle additional details to be handles to receiver of the broadcast
      */
-    public void emit(String action, Bundle bundle) {
+    public void emit(@NonNull String action, @NonNull Bundle bundle) {
         if (isValidAction(action)) {
             Intent intent = new Intent(action);
             intent.putExtras(bundle);
@@ -256,7 +241,7 @@ public final class LocalBurst extends BroadcastReceiver {
      *
      * @param bundle additional details to be handles to receiver of the broadcast
      */
-    public void emit(Bundle bundle) {
+    public void emit(@NonNull Bundle bundle) {
         if (isValidAction(DEFAULT_ACTION)) {
             Intent intent = new Intent(DEFAULT_ACTION);
             intent.putExtras(bundle);
@@ -269,7 +254,7 @@ public final class LocalBurst extends BroadcastReceiver {
      *
      * @param action action name
      */
-    public void emit(String action) {
+    public void emit(@NonNull String action) {
         if (isValidAction(action)) {
             Intent intent = new Intent(action);
             this.localBroadcastManager.sendBroadcast(intent);
@@ -282,8 +267,7 @@ public final class LocalBurst extends BroadcastReceiver {
      * @param actions {@link String}
      */
     public void removeListeners(String... actions) {
-        HashSet<String> _actions = new HashSet<String>();
-        Collections.addAll(_actions, actions);
+        Set<String> _actions = Common.Value.setOf(actions);
         for (String action : _actions) {
             if (isValidAction(action)) {
                 this.listeners.remove(action);
@@ -298,20 +282,15 @@ public final class LocalBurst extends BroadcastReceiver {
      * @param listeners {@link OnBroadcastListener}
      */
     public void removeListeners(OnBroadcastListener... listeners) {
-        HashSet<OnBroadcastListener> _listeners = new HashSet<OnBroadcastListener>();
-        Collections.addAll(_listeners, listeners);
+        Set<OnBroadcastListener> _listeners = Common.Value.setOf(listeners);
 
         if (!_listeners.isEmpty()) {
 
-            Collection<HashSet<OnBroadcastListener>> _broadcastListeners = this.listeners.values();
+            Collection<Set<OnBroadcastListener>> _broadcastListeners = this.listeners.values();
 
-            if (_broadcastListeners != null && !_broadcastListeners.isEmpty()) {
-                for (HashSet<OnBroadcastListener> broadcastListeners : _broadcastListeners) {
-                    broadcastListeners.removeAll(_listeners);
-                }
-
+            for (Set<OnBroadcastListener> broadcastListeners : _broadcastListeners) {
+                broadcastListeners.removeAll(_listeners);
             }
-
         }
     }
 
@@ -334,6 +313,7 @@ public final class LocalBurst extends BroadcastReceiver {
         if (hasListeners) {
             this.listeners.clear();
         }
+        // TODO: clear refs
     }
 
 
@@ -346,16 +326,13 @@ public final class LocalBurst extends BroadcastReceiver {
     public boolean hasListener(OnBroadcastListener... listeners) {
         boolean hasListener = false;
 
-        HashSet<OnBroadcastListener> _listeners = new HashSet<OnBroadcastListener>();
-        Collections.addAll(_listeners, listeners);
-        Collection<HashSet<OnBroadcastListener>> _broadcastListeners = this.listeners.values();
+        Set<OnBroadcastListener> _listeners = Common.Value.setOf(listeners);
+        Collection<Set<OnBroadcastListener>> _broadcastListeners = this.listeners.values();
 
-        if (_broadcastListeners != null) {
-            for (HashSet<OnBroadcastListener> broadcastListeners : _broadcastListeners) {
-                hasListener = broadcastListeners.containsAll(_listeners);
-                if (hasListener) {
-                    break;
-                }
+        for (Set<OnBroadcastListener> broadcastListeners : _broadcastListeners) {
+            hasListener = broadcastListeners.containsAll(_listeners);
+            if (hasListener) {
+                break;
             }
         }
 
@@ -372,7 +349,7 @@ public final class LocalBurst extends BroadcastReceiver {
         boolean hasListener = false;
 
         if (isValidAction(action)) {
-            HashSet<OnBroadcastListener> onBroadcastListeners = this.listeners.get(action);
+            Set<OnBroadcastListener> onBroadcastListeners = this.listeners.get(action);
             hasListener = onBroadcastListeners != null && !onBroadcastListeners.isEmpty();
         }
 
@@ -383,11 +360,11 @@ public final class LocalBurst extends BroadcastReceiver {
     /**
      * Ensure action is not null or empty
      *
-     * @param action
-     * @return
+     * @param action action name
+     * @return whether action is valid
      */
-    private boolean isValidAction(String action) {
-        return action != null && !action.isEmpty();
+    private Boolean isValidAction(String action) {
+        return !Common.Strings.isEmpty(action);
     }
 
 
@@ -404,6 +381,6 @@ public final class LocalBurst extends BroadcastReceiver {
          * @param action name of the action to listen on
          * @param extras intent extras received from the action
          */
-        void onBroadcast(String action, Bundle extras);
+        void onBroadcast(@NonNull String action, @NonNull Bundle extras);
     }
 }

@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.test.core.app.ApplicationProvider;
+
+import com.github.lykmapipo.common.provider.Provider;
 
 import org.junit.After;
 import org.junit.Before;
@@ -35,7 +38,13 @@ public class LocalBurstTest {
     @Before
     public void setup() {
         context = ApplicationProvider.getApplicationContext();
-        LocalBurst.create(context);
+        LocalBurst.of(new Provider() {
+            @NonNull
+            @Override
+            public Context getApplicationContext() {
+                return ApplicationProvider.getApplicationContext();
+            }
+        });
     }
 
 
@@ -54,9 +63,9 @@ public class LocalBurstTest {
 
         LocalBurst.OnBroadcastListener listener = new LocalBurst.OnBroadcastListener() {
             @Override
-            public void onBroadcast(String action, Bundle extras) {
+            public void onBroadcast(@NonNull String action, @NonNull Bundle extras) {
                 assertThat(action, is(equalTo(ACTION_ONE)));
-                assertThat(extras, is(nullValue()));
+                assertThat(extras, is(notNullValue()));
             }
         };
         broadcast.on(ACTION_ONE, listener);
@@ -73,7 +82,7 @@ public class LocalBurstTest {
 
         LocalBurst.OnBroadcastListener listener = new LocalBurst.OnBroadcastListener() {
             @Override
-            public void onBroadcast(String action, Bundle extras) {
+            public void onBroadcast(@NonNull String action, @NonNull Bundle extras) {
                 assertThat(action, is(equalTo(ACTION_ONE)));
 
                 assertThat(extras, is(notNullValue()));
@@ -96,7 +105,7 @@ public class LocalBurstTest {
 
         LocalBurst.OnBroadcastListener listener = new LocalBurst.OnBroadcastListener() {
             @Override
-            public void onBroadcast(String action, Bundle extras) {
+            public void onBroadcast(@NonNull String action, @NonNull Bundle extras) {
                 assertThat(action, is(equalTo(ACTION_ONE)));
 
                 assertThat(extras, is(notNullValue()));
@@ -118,7 +127,7 @@ public class LocalBurstTest {
 
         LocalBurst.OnBroadcastListener listener = new LocalBurst.OnBroadcastListener() {
             @Override
-            public void onBroadcast(String action, Bundle extras) {
+            public void onBroadcast(@NonNull String action, @NonNull Bundle extras) {
                 assertThat(action, is(equalTo(ACTION_ONE)));
 
                 assertThat(extras, is(notNullValue()));
@@ -143,7 +152,7 @@ public class LocalBurstTest {
 
         LocalBurst.OnBroadcastListener listener = new LocalBurst.OnBroadcastListener() {
             @Override
-            public void onBroadcast(String action, Bundle extras) {
+            public void onBroadcast(@NonNull String action, @NonNull Bundle extras) {
                 assertThat(action, is(equalTo(ACTION_ONE)));
             }
         };
@@ -170,7 +179,7 @@ public class LocalBurstTest {
 
         LocalBurst.OnBroadcastListener listener = new LocalBurst.OnBroadcastListener() {
             @Override
-            public void onBroadcast(String action, Bundle extras) {
+            public void onBroadcast(@NonNull String action, @NonNull Bundle extras) {
                 assertThat(action, is(equalTo(ACTION_ONE)));
             }
         };
@@ -197,7 +206,7 @@ public class LocalBurstTest {
 
         LocalBurst.OnBroadcastListener listener = new LocalBurst.OnBroadcastListener() {
             @Override
-            public void onBroadcast(String action, Bundle extras) {
+            public void onBroadcast(@NonNull String action, @NonNull Bundle extras) {
                 assertThat(action, is(equalTo(ACTION_ONE)));
             }
         };
@@ -226,7 +235,7 @@ public class LocalBurstTest {
 
         LocalBurst.OnBroadcastListener listener = new LocalBurst.OnBroadcastListener() {
             @Override
-            public void onBroadcast(String action, Bundle extras) {
+            public void onBroadcast(@NonNull String action, @NonNull Bundle extras) {
                 assertThat(action, is(equalTo(ACTION_ONE)));
             }
         };
