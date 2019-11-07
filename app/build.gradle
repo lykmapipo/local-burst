@@ -29,6 +29,6 @@ android {
 }
 
 dependencies {
+    // libraries dependencies
     implementation project(':library')
-    implementation "androidx.appcompat:appcompat:${ANDROIDX_APPCOMPACT_VERSION}"
 }
